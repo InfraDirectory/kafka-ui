@@ -20,7 +20,7 @@ import * as _ from 'lodash';
 import { useDebouncedCallback } from 'use-debounce';
 import { Option } from 'react-multi-select-component/dist/lib/interfaces';
 
-interface Props {
+export interface Props {
   clusterName: ClusterName;
   topicName: TopicName;
   isFetched: boolean;
@@ -178,7 +178,7 @@ const Messages: React.FC<Props> = ({
     return format(date, 'yyyy-MM-dd HH:mm:ss');
   };
 
-  const getMessageContentBody = (content: any) => {
+  const getMessageContentBody = (content: Record<string, unknown>) => {
     try {
       const contentObj =
         typeof content !== 'object' ? JSON.parse(content) : content;
@@ -256,7 +256,9 @@ const Messages: React.FC<Props> = ({
                 <td style={{ width: 150 }}>{message.offset}</td>
                 <td style={{ width: 100 }}>{message.partition}</td>
                 <td key={Math.random()} style={{ wordBreak: 'break-word' }}>
-                  {getMessageContentBody(message.content)}
+                  {getMessageContentBody(
+                    message.content as Record<string, unknown>
+                  )}
                 </td>
               </tr>
             ))}
@@ -305,7 +307,6 @@ const Messages: React.FC<Props> = ({
               id="selectSeekType"
               name="selectSeekType"
               onChange={handleSeekTypeChange}
-              defaultValue={SeekType.OFFSET}
               value={selectedSeekType}
             >
               <option value={SeekType.OFFSET}>Offset</option>
